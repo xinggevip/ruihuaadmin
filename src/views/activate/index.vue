@@ -20,12 +20,12 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column show-overflow-tooltip align="center" label="名称" width="200">
+      <el-table-column show-overflow-tooltip align="center" label="活动名称" width="200">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column show-overflow-tooltip align="center" label="介绍" width="400">
+      <el-table-column show-overflow-tooltip align="center" label="活动介绍" width="400">
         <template slot-scope="scope">
           {{ scope.row.profile }}
         </template>
@@ -45,7 +45,8 @@
           {{ statusFormatter(scope.row.strone) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="350"  fixed="right" >
+      <!-- <el-table-column label="操作" min-width="350"  fixed="right" > -->
+      <el-table-column label="操作" min-width="350"  >
         <template slot-scope="scope">
           <el-button
             size="mini"
