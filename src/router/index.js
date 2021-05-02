@@ -67,6 +67,21 @@ export const constantRoutes = [
         component: () => import('@/views/activate/index'),
         meta: { title: '活动管理', icon: 'el-icon-s-help', requireAuth: true }
       },
+      {
+        path: '/active/player',
+        name: 'Player',
+        hidden: true,
+        component: () => import('@/views/player/index'),
+        meta: { title: '选手管理', icon: 'el-icon-s-help', requireAuth: true }
+        
+      },
+      {
+        path: '/active/score',
+        name: 'Score',
+        hidden: true,
+        component: () => import('@/views/score/index'),
+        meta: { title: '成绩查询', icon: 'el-icon-s-help', requireAuth: true }
+      }
     ]
   },
 

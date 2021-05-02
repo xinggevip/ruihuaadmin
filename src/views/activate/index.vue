@@ -15,12 +15,12 @@
       fit
       highlight-current-row
     >
-      <el-table-column show-overflow-tooltip align="center" label="ID" width="95">
+      <el-table-column show-overflow-tooltip align="center" label="ID" width="70">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column show-overflow-tooltip align="center" label="名称" width="250">
+      <el-table-column show-overflow-tooltip align="center" label="名称" width="200">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
@@ -30,31 +30,52 @@
           {{ scope.row.profile }}
         </template>
       </el-table-column>
-      <el-table-column show-overflow-tooltip align="center" label="创建时间" width="200">
+      <el-table-column show-overflow-tooltip align="center" label="创建时间" width="180">
         <template slot-scope="scope">
-          {{ scope.row.pushDate }}
+          {{ dateFormatter(scope.row.pushDate) }}
         </template>
       </el-table-column>
-      <el-table-column show-overflow-tooltip align="center" label="开始时间" width="200">
+      <el-table-column show-overflow-tooltip align="center" label="开始时间" width="180">
         <template slot-scope="scope">
-          {{ scope.row.startDate }}
+          {{ dateFormatter(scope.row.startDate) }}
         </template>
       </el-table-column>
-      
-      <el-table-column label="操作" min-width="290"  fixed="right" >
-        <template>
+      <el-table-column show-overflow-tooltip align="center" label="状态" width="80">
+        <template slot-scope="scope">
+          {{ statusFormatter(scope.row.strone) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" min-width="350"  fixed="right" >
+        <template slot-scope="scope">
           <el-button
             size="mini"
             type="primary"
-          >随机上台</el-button>
+            @click="toPlayer(scope.row)"
+          >选手管理</el-button>
+
           <el-button
+            v-if="-1 == parseInt(scope.row.strone) || parseInt(scope.row.strone) > 0"
             size="mini"
             type="success"
-          >查看成绩</el-button>
+            @click="toScore(scope.row)"
+          >
+            成绩查询
+          </el-button>
+
+          <el-button
+            disabled
+            v-if="parseInt(scope.row.strone) == 0"
+            size="mini"
+            type="success"
+            @click="toScore(scope.row)"
+          >
+           成绩查询
+          </el-button>
+
           <el-button
             size="mini"
             type="warning"
-          >隐藏</el-button>
+          >首页隐藏</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -105,7 +126,7 @@
           page: 1,
           pageCount: 10,
           value: '',
-          status: '进行中',
+          status: '', // 进行中  已结束
           type:6
         },
         user: JSON.parse(this.$store.state.user),
@@ -134,9 +155,9 @@
       getActList(){
         this.listLoading = true
         this.$post('/activate/getActList', this.page).then((response) => {
-          console.log(response);
+          console.log('/activate/getActList' + this.page,response);
           this.list = response.data.data.records;
-          this.pageSetting.total = result.data.data.total;
+          this.pageSetting.total = response.data.data.total;
           // console.log(result);
         }).catch((err) => {
 
@@ -191,6 +212,36 @@
         }).catch((error) => {
 
         }).finally();
+      },
+       // 日期格式化
+      dateFormatter (value, column) {
+        // console.log(row.savedate);
+        // let datetime = row.starttime;
+        if(value){
+          return this.$dateUtil.mToDateStr(value, 'yyyy-MM-dd hh:mm')
+        }
+        return "空日期"
+      },
+      // 活动状态格式化
+      statusFormatter(value,column){
+        let res = parseInt(value);
+        if(-1 === res){
+          return "已结束"
+        }else if(0 === res){ 
+          return "未开始"
+        }else if(res > 0){
+          return "进行中"
+        }else{
+          return "配置异常，" + value; 
+        }
+      },
+      toPlayer(row){
+        console.log(row);
+        this.$router.push({path:'/active/player',query: {actid:row.id}});
+      },
+      toScore(row){
+        console.log(row);
+        this.$router.push({path:'/active/score',query: {actid:row.id}});
       }
 
 
